@@ -6,22 +6,30 @@
 /*   By: zyunusov <zyunusov@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 12:49:04 by zyunusov          #+#    #+#             */
-/*   Updated: 2022/10/30 23:24:05 by zyunusov         ###   ########.fr       */
+/*   Updated: 2022/10/31 13:02:39 by zyunusov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
-# include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
 # include "get_next_line/get_next_line.h"
 # include "libft/libft.h"
+#include "mlx/mlx.h"
+
+
+# define BACKG "./textures/background.xpm"
 
 typedef struct s_data
 {
+    void    *mlx;
+    void    *background;
+    void    *window;
+    int		imgy;
+    int		imgx;
     char *map1;
     char **map2;
     char **tmp_map2;
@@ -46,5 +54,6 @@ void	ft_check_wall(t_data *data);
 void	ft_check_other_walls(t_data *data);
 void	ft_check_validmap(t_data *data, int x, int y);
 void	ft_check_path(t_data *data);
+void	ft_in_image(t_data *data);
 
 #endif
