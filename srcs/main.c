@@ -6,7 +6,7 @@
 /*   By: zyunusov <zyunusov@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 18:47:32 by zyunusov          #+#    #+#             */
-/*   Updated: 2022/10/31 13:02:25 by zyunusov         ###   ########.fr       */
+/*   Updated: 2022/11/02 16:11:32 by zyunusov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 		ft_check_path(data);
 		data->mlx = mlx_init();
 		ft_in_image(data);
-
+		// mlx_hook(data->window, 2, 1L << 0, ft_key_event, data);
 		mlx_loop(data->mlx);
     }
     else
@@ -231,8 +231,185 @@ void	ft_check_path(t_data *data)
 
 void	ft_in_image(t_data *data)
 {
-	data->background = mlx_xpm_file_to_image(data->mlx, BACKG,
+	data->player_f = mlx_xpm_file_to_image(data->mlx, PL_FE,
 			&data->imgx, &data->imgy);
+	data->player_b = mlx_xpm_file_to_image(data->mlx, PL_BE,
+			&data->imgx, &data->imgy);
+	data->player_l = mlx_xpm_file_to_image(data->mlx, PL_LE,
+			&data->imgx, &data->imgy);
+	data->player_r = mlx_xpm_file_to_image(data->mlx, PL_RE,
+			&data->imgx, &data->imgy);
+	data->bgrnd = mlx_xpm_file_to_image(data->mlx, BACKG,
+			&data->imgx, &data->imgy);
+	data->food = mlx_xpm_file_to_image(data->mlx, FOODS,
+			&data->imgx, &data->imgy);
+	data->exit = mlx_xpm_file_to_image(data->mlx, EXIT,
+			&data->imgx, &data->imgy);
+	data->wall = mlx_xpm_file_to_image(data->mlx, WAL,
+			&data->imgx, &data->imgy);		
 	data->window = mlx_new_window(data->mlx, data->map_x * 64, \
 		data->map_y * 64, "so_long");
+	data->curr_pos = 'F';
+	ft_put_image(data);
+}
+
+void	ft_put_image(t_data *data)
+{
+	int x;
+	int y;
+
+	x = 0;
+	y = 0;
+	while(y < data->map_y * 64)
+	{
+		if (data->map2[y / 64][x / 64] != '1'
+			&& data->map2[y / 64][x / 64] != '0')
+			mlx_put_image_to_window(data->mlx, data->window, data->bgrnd, x, y);
+		if (data->map2[y / 64][x / 64] == '1')
+			mlx_put_image_to_window(data->mlx, data->window, data->wall, x, y);
+		else if (data->map2[y / 64][x / 64] == '0')
+			mlx_put_image_to_window(data->mlx, data->window, data->bgrnd, x, y);
+		else if (data->map2[y / 64][x / 64] == 'E')
+			mlx_put_image_to_window(data->mlx, data->window, data->exit, x, y);
+		else if (data->map2[y / 64][x / 64] == 'C')
+			mlx_put_image_to_window(data->mlx, data->window, data->food, x, y);
+		else if (data->map2[y / 64][x / 64] == 'P')
+			ft_put_image_player(data, x, y);
+		ft_xy_oper(&x, &y, data);
+	}
+	ft_score(data);
+}
+
+void ft_xy_oper(int *x, int *y, t_data *data)
+{
+	if (*x == data->map_x * 64)
+		{
+			*x = -64;
+			*y += 64;
+		}
+		*x += 64;
+}
+
+void ft_put_image_player(t_data *data, int x, int y)
+{
+	if (data->curr_pos == 'F')
+		mlx_put_image_to_window(data->mlx, data->window, data->player_f, x, y);
+	else if (data->curr_pos == 'R')
+		mlx_put_image_to_window(data->mlx, data->window, data->player_r, x, y);
+	else if (data->curr_pos == 'L')
+		mlx_put_image_to_window(data->mlx, data->window, data->player_l, x, y);
+	else if (data->curr_pos == 'B')
+		mlx_put_image_to_window(data->mlx, data->window, data->player_b, x, y);
+}
+
+void	ft_score(t_data *data)
+{
+	data->move_count_screen = ft_itoa(data->move_count);
+	mlx_string_put(data->mlx, data->window, 30, 30, 0xFFFFFF, \
+	"Move: ");
+	mlx_string_put(data->mlx, data->window, 65, 30, 0xFFFFFF, \
+		data->move_count_screen);
+	free(data->move_count_screen);
+}
+
+
+int ft_key_event(int key, t_data *data)
+{
+	if (key == 53)
+	{
+		ft_free_all(data);
+		exit(EXIT_SUCCESS);
+	}
+	ft_check_up(key, data);
+	ft_check_down(key, data);
+	ft_check_left(key, data);
+	ft_check_right(key, data);
+	return (0);
+}
+
+void	ft_check_up(int key, t_data *data)
+{
+	if (key == 13)
+	{
+		if (ft_check_mov(data, data->ply_x, data->ply_y - 1))
+		{
+			data->map2[data->ply_y][data->ply_x] = '0';
+			data->ply_y -= 1;
+			data->map2[data->ply_y][data->ply_x] = 'P';
+			data->curr_pos = 'B';
+			ft_render_after_move(data);
+		}
+	}
+}
+
+void	ft_check_down(int key, t_data *data)
+{
+	if (key == 1)
+	{
+		if (ft_check_mov(data, data->ply_x, data->ply_y + 1))
+		{
+			data->map2[data->ply_y][data->ply_x] = '0';
+			data->ply_y += 1;
+			data->map2[data->ply_y][data->ply_x] = 'P';
+			data->curr_pos = 'F';
+			ft_render_after_move(data);
+		}
+	}
+}
+
+void	ft_check_left(int key, t_data *data)
+{
+	if (key == 0)
+	{
+		if (ft_check_mov(data, data->ply_x - 1, data->ply_y))
+		{
+			data->map2[data->ply_y][data->ply_x] = '0';
+			data->ply_x -= 1;
+			data->map2[data->ply_y][data->ply_x] = 'P';
+			data->curr_pos = 'L';
+			ft_render_after_move(data);
+		}
+	}
+}
+
+
+void	ft_check_right(int key, t_data *data)
+{
+	if (key == 2)
+	{
+		if (ft_check_mov(data, data->ply_x + 1, data->ply_y))
+		{
+			data->map2[data->ply_y][data->ply_x] = '0';
+			data->ply_x += 1;
+			data->map2[data->ply_y][data->ply_x] = 'P';
+			data->curr_pos = 'R';
+			ft_render_after_move(data);
+		}
+	}
+}
+
+int ft_check_mov(t_data *data, int x, int y)
+{
+	if (data->map2[y][x] != '1')
+	{
+		if (data->map2[y][x] == 'C')
+			data->food_count--;
+		else if (!data->food_count && data->map2[y][x] == 'E')
+		{
+			ft_printf("Move: %d\nCongratulations!", ++(data->move_count));
+			ft_free_all(data);
+			exit(EXIT_SUCCESS);
+		}
+		if (data->map2[y][x] == 'E')
+			return (0);
+		ft_printf("Move: %d\n", ++(data->move_count));
+		return (1);
+	}
+	return (0);
+}
+
+void	ft_render_after_move(t_data *data)
+{
+	mlx_clear_window(data->mlx, data->window);
+	ft_put_image(data);
 }
