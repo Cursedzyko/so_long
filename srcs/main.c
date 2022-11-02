@@ -6,7 +6,7 @@
 /*   By: zyunusov <zyunusov@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 18:47:32 by zyunusov          #+#    #+#             */
-/*   Updated: 2022/11/02 16:11:32 by zyunusov         ###   ########.fr       */
+/*   Updated: 2022/11/02 17:06:28 by zyunusov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,16 @@
 
 int ft_error(char *msg, t_data *data)
 {
-    ft_putstr_fd(msg, 2);
+    ft_printf("%s", msg);
     ft_free_all(data);
     exit(EXIT_FAILURE);
+}
+
+int	ft_close_window(t_data *data)
+{
+	ft_free_all(data);
+	exit(EXIT_SUCCESS);
+	return (0);
 }
 
 void    ft_free_all(t_data *data)
@@ -54,7 +61,8 @@ int main(int argc, char **argv)
 		ft_check_path(data);
 		data->mlx = mlx_init();
 		ft_in_image(data);
-		// mlx_hook(data->window, 2, 1L << 0, ft_key_event, data);
+		mlx_hook(data->window, 2, 1L << 0, ft_key_event, data);
+		mlx_hook(data->window, 17, 1L << 2, ft_close_window, data);
 		mlx_loop(data->mlx);
     }
     else
@@ -194,7 +202,7 @@ void	ft_check_validmap(t_data *data, int x, int y)
 	p = &data->tmp_map2[y][x];
 	if (*p == 'E')
 		data->valid_ex = 1;
-	if (*p != 'E' && *p != '1')
+	if ( *p != '1')
 	{
 		if (*p == 'C')
 			data->tmp_food_count--;
