@@ -6,7 +6,7 @@
 /*   By: zyunusov <zyunusov@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 18:47:32 by zyunusov          #+#    #+#             */
-/*   Updated: 2022/11/03 19:33:56 by zyunusov         ###   ########.fr       */
+/*   Updated: 2022/11/03 21:00:56 by zyunusov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,10 @@ void    ft_get_map(t_data *data, char *map)
 
 	fd = open(map, O_RDONLY);
 	if (fd < 0)
-		ft_error("Error!\nFile don't found!", data);
+		ft_error("Error!\nFile don't found!\n", data);
 	buff = get_next_line(fd);
 	if (!buff)
-		ft_error("Error!\nFile is empty!", data);
+		ft_error("Error!\nFile is empty!\n", data);
 	while (buff)
 	{
 		data->map1 = ft_strjoin(data->map1, buff);
@@ -128,7 +128,7 @@ void ft_check_map(t_data *data)
 				data->ply_y = i;
 			}
 			else if (data->map2[i][j] != '0' && data->map2[i][j] != '1')
-				ft_error("Error!\nMap must include 1P or 1C or 1E.", data);
+				ft_error("Error!\nMap must include 1P or 1C or 1E.\n", data);
 			j++;
 		}
 		i++;
@@ -139,7 +139,7 @@ void ft_check_map(t_data *data)
 void    ft_check_num_fe(t_data *data)
 {
     if (data->food_count < 1 || data->exit_count != 1 || data->player_count != 1)
-        ft_error("Error!\nMap must include 1P or 1C or 1E.", data);
+        ft_error("Error!\nMap must include 1P or 1C or 1E.\n", data);
 }
 
 void	ft_check_rectan(t_data *data)
@@ -155,7 +155,7 @@ void	ft_check_rectan(t_data *data)
 	{
 		len_line2 = ft_strlen(data->map2[i]);
 		if (len_line2 != len_line1)
-			ft_error("Error!\nThe map must be rectangular.", data);
+			ft_error("Error!\nThe map must be rectangular.\n", data);
 		i++;
 	}	
 }
@@ -177,7 +177,7 @@ void	ft_check_wall(t_data *data)
 	while(data->map2[0][coun] && data->map2[len - 1][coun])
 	{
 		if (data->map2[0][coun] != '1' || data->map2[len - 1][coun] != '1') // all chars
-			ft_error("Error!\nThe walls need to be closed", data);
+			ft_error("Error!\nThe walls need to be closed\n", data);
 		coun++;
 	}
 	ft_check_other_walls(data);
@@ -193,7 +193,7 @@ void	ft_check_other_walls(t_data *data)
 	while(coun < data->map_y)
 	{
 		if (data->map2[coun][0] != '1' || data->map2[coun][len - 1] != '1') // last and first char
-			ft_error("Error!\nThe walls need to be closed", data);
+			ft_error("Error!\nThe walls need to be closed\n", data);
 		coun++;
 	}
 	data->tmp_food_count = data->food_count;
@@ -238,7 +238,7 @@ void	ft_check_path(t_data *data)
 	}
 	free(data->tmp_map2);
 	if (data->tmp_food_count != 0 || data->valid_ex != 1)
-		ft_error("Error!\nThere isn't valid way to go exit!!!", data);
+		ft_error("Error!\nThere isn't valid way to go exit!!!\n", data);
 }
 
 void	ft_in_image(t_data *data)
@@ -354,7 +354,6 @@ void	ft_check_up(int key, t_data *data)
 		}
 		else if ((ft_check_mov(data, data->ply_x, data->ply_y - 1)) == 2)
 		{
-			ft_printf("Y - 1 exit\n");
 			data->map2[data->ply_y][data->ply_x] = '0';
 			data->ply_y -= 1;
 			data->map2[data->ply_y][data->ply_x] = 'P';
@@ -380,7 +379,6 @@ void	ft_check_down(int key, t_data *data)
 		}
 		else if ((ft_check_mov(data, data->ply_x, data->ply_y + 1)) == 2)
 		{
-			ft_printf("Y + 1 exit\n");
 			data->map2[data->ply_y][data->ply_x] = '0';
 			data->ply_y += 1;
 			data->map2[data->ply_y][data->ply_x] = 'P';
@@ -405,7 +403,6 @@ void	ft_check_left(int key, t_data *data)
 		}
 		else if ((ft_check_mov(data, data->ply_x - 1, data->ply_y)) == 2)
 		{
-			ft_printf("X - 1 exit\n");
 			data->map2[data->ply_y][data->ply_x] = '0';
 			data->ply_x -= 1;
 			data->map2[data->ply_y][data->ply_x] = 'P';
@@ -431,7 +428,6 @@ void	ft_check_right(int key, t_data *data)
 		}
 		else if ((ft_check_mov(data, data->ply_x + 1, data->ply_y)) == 2)
 		{
-			ft_printf("X + 1 exit\n");
 			data->map2[data->ply_y][data->ply_x] = '0';
 			data->ply_x += 1;
 			data->map2[data->ply_y][data->ply_x] = 'P';
@@ -446,21 +442,15 @@ int ft_check_mov(t_data *data, int x, int y)
 	if (data->map2[y][x] != '1')
 	{
 		if (data->map2[y][x] == 'C')
-		{
-			ft_printf("COl: %d\n", data->food_count);
 			data->food_count--;
-		}
 		else if (data->food_count == 0 && data->map2[y][x] == 'E')
 		{
-			ft_printf("Move: %d\nCongratulations!", ++(data->move_count));
+			ft_printf("Move: %d\nCongratulations!\n", ++(data->move_count));
 			ft_free_all(data);
 			exit(EXIT_SUCCESS);
 		}
 		else if (data->map2[y][x] == 'E' && data->food_count != 0)
-		{
-			ft_printf("EXIT RETURN 2 \n");
 			return (2);
-		}
 		ft_printf("Move: %d\n", ++(data->move_count));
 		return (1);
 	}
@@ -469,6 +459,6 @@ int ft_check_mov(t_data *data, int x, int y)
 
 void	ft_render_after_move(t_data *data)
 {
-	// mlx_clear_window(data->mlx, data->window);
+	mlx_clear_window(data->mlx, data->window);
 	ft_put_image(data);
 }
