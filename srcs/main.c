@@ -6,7 +6,7 @@
 /*   By: zyunusov <zyunusov@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 18:47:32 by zyunusov          #+#    #+#             */
-/*   Updated: 2022/11/02 17:06:28 by zyunusov         ###   ########.fr       */
+/*   Updated: 2022/11/03 17:43:51 by zyunusov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -339,7 +339,7 @@ void	ft_check_up(int key, t_data *data)
 {
 	if (key == 13)
 	{
-		if (ft_check_mov(data, data->ply_x, data->ply_y - 1))
+		if ((ft_check_mov(data, data->ply_x, data->ply_y - 1)) == 1)
 		{
 			data->map2[data->ply_y][data->ply_x] = '0';
 			data->ply_y -= 1;
@@ -347,6 +347,15 @@ void	ft_check_up(int key, t_data *data)
 			data->curr_pos = 'B';
 			ft_render_after_move(data);
 		}
+		else if ((ft_check_mov(data, data->ply_x, data->ply_y - 1)) == 2)
+		{
+			data->map2[data->ply_y][data->ply_x] = 'E';
+			data->ply_y -= 1;
+			data->map2[data->ply_y][data->ply_x] = 'P';
+			data->curr_pos = 'F';
+			ft_render_after_move(data);
+		}
+		
 	}
 }
 
@@ -354,9 +363,17 @@ void	ft_check_down(int key, t_data *data)
 {
 	if (key == 1)
 	{
-		if (ft_check_mov(data, data->ply_x, data->ply_y + 1))
+		if ((ft_check_mov(data, data->ply_x, data->ply_y + 1)) == 1)
 		{
 			data->map2[data->ply_y][data->ply_x] = '0';
+			data->ply_y += 1;
+			data->map2[data->ply_y][data->ply_x] = 'P';
+			data->curr_pos = 'F';
+			ft_render_after_move(data);
+		}
+		else if ((ft_check_mov(data, data->ply_x, data->ply_y + 1)) == 2)
+		{
+			data->map2[data->ply_y][data->ply_x] = 'E';
 			data->ply_y += 1;
 			data->map2[data->ply_y][data->ply_x] = 'P';
 			data->curr_pos = 'F';
@@ -369,9 +386,17 @@ void	ft_check_left(int key, t_data *data)
 {
 	if (key == 0)
 	{
-		if (ft_check_mov(data, data->ply_x - 1, data->ply_y))
+		if ((ft_check_mov(data, data->ply_x - 1, data->ply_y)) == 1)
 		{
 			data->map2[data->ply_y][data->ply_x] = '0';
+			data->ply_x -= 1;
+			data->map2[data->ply_y][data->ply_x] = 'P';
+			data->curr_pos = 'L';
+			ft_render_after_move(data);
+		}
+		else if ((ft_check_mov(data, data->ply_x - 1, data->ply_y)) == 2)
+		{
+			data->map2[data->ply_y][data->ply_x] = 'E';
 			data->ply_x -= 1;
 			data->map2[data->ply_y][data->ply_x] = 'P';
 			data->curr_pos = 'L';
@@ -385,9 +410,17 @@ void	ft_check_right(int key, t_data *data)
 {
 	if (key == 2)
 	{
-		if (ft_check_mov(data, data->ply_x + 1, data->ply_y))
+		if ((ft_check_mov(data, data->ply_x + 1, data->ply_y)) == 1)
 		{
 			data->map2[data->ply_y][data->ply_x] = '0';
+			data->ply_x += 1;
+			data->map2[data->ply_y][data->ply_x] = 'P';
+			data->curr_pos = 'R';
+			ft_render_after_move(data);
+		}
+		else if ((ft_check_mov(data, data->ply_x + 1, data->ply_y)) == 2)
+		{
+			data->map2[data->ply_y][data->ply_x] = 'E';
 			data->ply_x += 1;
 			data->map2[data->ply_y][data->ply_x] = 'P';
 			data->curr_pos = 'R';
@@ -401,15 +434,18 @@ int ft_check_mov(t_data *data, int x, int y)
 	if (data->map2[y][x] != '1')
 	{
 		if (data->map2[y][x] == 'C')
+		{
+			ft_printf("COl: %d\n", data->food_count);
 			data->food_count--;
-		else if (!data->food_count && data->map2[y][x] == 'E')
+		}
+		else if (data->food_count == 0 && data->map2[y][x] == 'E')
 		{
 			ft_printf("Move: %d\nCongratulations!", ++(data->move_count));
 			ft_free_all(data);
 			exit(EXIT_SUCCESS);
 		}
-		if (data->map2[y][x] == 'E')
-			return (0);
+		else if (data->map2[y][x] == 'E' && data->food_count != 0)
+			return (2);
 		ft_printf("Move: %d\n", ++(data->move_count));
 		return (1);
 	}
@@ -418,6 +454,6 @@ int ft_check_mov(t_data *data, int x, int y)
 
 void	ft_render_after_move(t_data *data)
 {
-	mlx_clear_window(data->mlx, data->window);
+	// mlx_clear_window(data->mlx, data->window);
 	ft_put_image(data);
 }
