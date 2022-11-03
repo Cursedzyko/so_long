@@ -6,7 +6,7 @@
 /*   By: zyunusov <zyunusov@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 18:47:32 by zyunusov          #+#    #+#             */
-/*   Updated: 2022/11/03 17:43:51 by zyunusov         ###   ########.fr       */
+/*   Updated: 2022/11/03 19:33:56 by zyunusov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,11 @@ void ft_check_map(t_data *data)
 			if (data->map2[i][j] == 'C')
 				data->food_count++;
 			else if (data->map2[i][j] == 'E')
+			{
 				data->exit_count++;
+				data->ex_y = i;
+				data->ex_x = j;
+			}	
 			else if (data->map2[i][j] == 'P')
 			{
 				data->player_count++;
@@ -344,12 +348,14 @@ void	ft_check_up(int key, t_data *data)
 			data->map2[data->ply_y][data->ply_x] = '0';
 			data->ply_y -= 1;
 			data->map2[data->ply_y][data->ply_x] = 'P';
+			data->map2[data->ex_y][data->ex_x] = 'E';
 			data->curr_pos = 'B';
 			ft_render_after_move(data);
 		}
 		else if ((ft_check_mov(data, data->ply_x, data->ply_y - 1)) == 2)
 		{
-			data->map2[data->ply_y][data->ply_x] = 'E';
+			ft_printf("Y - 1 exit\n");
+			data->map2[data->ply_y][data->ply_x] = '0';
 			data->ply_y -= 1;
 			data->map2[data->ply_y][data->ply_x] = 'P';
 			data->curr_pos = 'F';
@@ -368,12 +374,14 @@ void	ft_check_down(int key, t_data *data)
 			data->map2[data->ply_y][data->ply_x] = '0';
 			data->ply_y += 1;
 			data->map2[data->ply_y][data->ply_x] = 'P';
+			data->map2[data->ex_y][data->ex_x] = 'E';
 			data->curr_pos = 'F';
 			ft_render_after_move(data);
 		}
 		else if ((ft_check_mov(data, data->ply_x, data->ply_y + 1)) == 2)
 		{
-			data->map2[data->ply_y][data->ply_x] = 'E';
+			ft_printf("Y + 1 exit\n");
+			data->map2[data->ply_y][data->ply_x] = '0';
 			data->ply_y += 1;
 			data->map2[data->ply_y][data->ply_x] = 'P';
 			data->curr_pos = 'F';
@@ -391,12 +399,14 @@ void	ft_check_left(int key, t_data *data)
 			data->map2[data->ply_y][data->ply_x] = '0';
 			data->ply_x -= 1;
 			data->map2[data->ply_y][data->ply_x] = 'P';
+			data->map2[data->ex_y][data->ex_x] = 'E';
 			data->curr_pos = 'L';
 			ft_render_after_move(data);
 		}
 		else if ((ft_check_mov(data, data->ply_x - 1, data->ply_y)) == 2)
 		{
-			data->map2[data->ply_y][data->ply_x] = 'E';
+			ft_printf("X - 1 exit\n");
+			data->map2[data->ply_y][data->ply_x] = '0';
 			data->ply_x -= 1;
 			data->map2[data->ply_y][data->ply_x] = 'P';
 			data->curr_pos = 'L';
@@ -415,12 +425,14 @@ void	ft_check_right(int key, t_data *data)
 			data->map2[data->ply_y][data->ply_x] = '0';
 			data->ply_x += 1;
 			data->map2[data->ply_y][data->ply_x] = 'P';
+			data->map2[data->ex_y][data->ex_x] = 'E';
 			data->curr_pos = 'R';
 			ft_render_after_move(data);
 		}
 		else if ((ft_check_mov(data, data->ply_x + 1, data->ply_y)) == 2)
 		{
-			data->map2[data->ply_y][data->ply_x] = 'E';
+			ft_printf("X + 1 exit\n");
+			data->map2[data->ply_y][data->ply_x] = '0';
 			data->ply_x += 1;
 			data->map2[data->ply_y][data->ply_x] = 'P';
 			data->curr_pos = 'R';
@@ -445,7 +457,10 @@ int ft_check_mov(t_data *data, int x, int y)
 			exit(EXIT_SUCCESS);
 		}
 		else if (data->map2[y][x] == 'E' && data->food_count != 0)
+		{
+			ft_printf("EXIT RETURN 2 \n");
 			return (2);
+		}
 		ft_printf("Move: %d\n", ++(data->move_count));
 		return (1);
 	}

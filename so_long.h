@@ -6,7 +6,7 @@
 /*   By: zyunusov <zyunusov@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 12:49:04 by zyunusov          #+#    #+#             */
-/*   Updated: 2022/11/02 15:41:28 by zyunusov         ###   ########.fr       */
+/*   Updated: 2022/11/03 19:31:32 by zyunusov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ typedef struct s_data
     int map_y;
     int tmp_food_count;
     int valid_ex;
+    int ex_y;
+    int ex_x;
 } t_data;
 
 void    ft_free_all(t_data *data);
