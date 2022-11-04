@@ -6,13 +6,13 @@
 #    By: zyunusov <zyunusov@student.42wolfsburg.de> +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/25 12:52:09 by zyunusov          #+#    #+#              #
-#    Updated: 2022/11/02 15:36:40 by zyunusov         ###   ########.fr        #
+#    Updated: 2022/11/04 12:52:30 by zyunusov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = so_long
 
-SRCS = srcs/main.c
+SRCS = srcs/main.c srcs/check_map.c srcs/check_map_1.c srcs/check_valid_path_dfs.c srcs/check_mov_render.c srcs/events.c srcs/screen_graph.c
 OBJS = $(SRCS:.c=.o)
 
 CC = gcc 
@@ -29,7 +29,7 @@ $(MFLAGS):
 	make -sC ./mlx
 	make -sC ./libft
 	make -sC ./get_next_line
-	make -C ./ft_printf
+	make -sC ./ft_printf
 
 	
 $(NAME): $(OBJS)
@@ -38,14 +38,14 @@ $(NAME): $(OBJS)
 clean:
 	make clean -sC ./libft
 	make clean -sC ./get_next_line
-	make clean -C ./mlx
-	make clean -C ./ft_printf
-	$(RM) ./src/*.o
+	make clean -sC ./mlx
+	make clean -sC ./ft_printf
+	$(RM) ./srcs/*.o
 
 fclean: clean
 	make fclean -sC ./libft
 	make fclean -sC ./get_next_line
-	make fclean -C ./ft_printf
+	make fclean -sC ./ft_printf
 	$(RM) $(NAME) 
 
 re: fclean all
