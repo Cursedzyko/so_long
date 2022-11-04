@@ -6,7 +6,7 @@
 /*   By: zyunusov <zyunusov@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 12:34:37 by zyunusov          #+#    #+#             */
-/*   Updated: 2022/11/04 13:05:40 by zyunusov         ###   ########.fr       */
+/*   Updated: 2022/11/04 20:49:54 by zyunusov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	ft_get_map(t_data *data, char *map)
 		ft_error("Error!\nFile is empty!\n", data);
 	while (buff)
 	{
-		data->map1 = ft_strjoin(data->map1, buff);
+		data->map1 = ft_join(data->map1, buff);
 		free(buff);
 		buff = get_next_line(fd);
 	}
