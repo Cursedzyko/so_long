@@ -6,7 +6,7 @@
 /*   By: zyunusov <zyunusov@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 18:47:32 by zyunusov          #+#    #+#             */
-/*   Updated: 2022/11/04 20:54:39 by zyunusov         ###   ########.fr       */
+/*   Updated: 2022/11/06 11:24:13 by zyunusov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ void	ft_free_mlx(t_data *data)
 	mlx_destroy_image(data->mlx, data->player_b);
 	mlx_destroy_image(data->mlx, data->player_f);
 	mlx_destroy_window(data->mlx, data->window);
-	free(data->bgrnd);
 	free(data->mlx);
 }
 

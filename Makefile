@@ -6,7 +6,7 @@
 #    By: zyunusov <zyunusov@student.42wolfsburg.de> +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/25 12:52:09 by zyunusov          #+#    #+#              #
-#    Updated: 2022/11/04 20:51:42 by zyunusov         ###   ########.fr        #
+#    Updated: 2022/11/06 11:25:34 by zyunusov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ OBJS = $(SRCS:.c=.o)
 CC = gcc 
 MFLAGS = ./mlx/libmlx.a ./libft/libft.a ./get_next_line/get_next_line.a ./ft_printf/libftprintf.a
 
-CFLAGS = -Wall -Wextra -Werror -g -I./mlx -I./libft -I./get_next_line 
+CFLAGS = -Wall -Wextra -Werror -I./mlx -I./libft -I./get_next_line 
 RM = rm -rf
 
 
