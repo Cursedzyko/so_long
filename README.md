@@ -34,6 +34,7 @@ My game was made in C with the graphical library MLX42. The goal of the game is 
   2. Split string to 2D array and assing to map2
   3. Split string to 2D array and assing to tmp (it will be use to find a valid path to exit(check DFS))
   
-### Using MLX display map
+### Using MLX display map<img width="1218" alt="Screen Shot 2022-11-07 at 5 45 42 PM" src="https://user-images.githubusercontent.com/106797151/200366602-e4658440-ca60-4782-bdd4-fe416e1d808e.png">
+
 
 
